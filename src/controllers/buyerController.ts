@@ -35,47 +35,6 @@ class BuyerController{
         }
     }
 
-    async create(req: express.Request, res: express.Response): Promise<void> {
-        const username: string = req.body.username
-        const email: string = req.body.email
-        const password: string = Helper.getHashed(req.body.password)
-        const phoneNum: string = req.body.phoneNum
-        const nrcNumber: string = req.body.nrcNumber
-        const address: string = req.body.address
-        const role: number = req.body.role
-        const bio: string = req.body.bio
-        const rating: boolean = req.body.rating
-        const registered: boolean = req.body.registered
-        const savedItems: Array<any> = req.body.savedItems
-        const expoTokens: Array<any> = req.body.expoTokens
-        
-
-        try {
-            //Check if there's already with required Username and email
-            const buyer = await Buyer.findOne({email}).lean()
-            if(buyer){
-                 return HttpResponse.respondError(res,"This user email is already used!",StatusCodes.CONFLICT)
-            }
-            await Buyer.create({
-                username,
-                email,
-                password,
-                phoneNum,
-                nrcNumber,
-                address,
-                role,
-                bio,
-                rating,
-                registered,
-                savedItems,
-                expoTokens
-            })
-            HttpResponse.respondStatus(res,"Buyer Created Successfully1")
-        } catch (error) {
-            HttpResponse.respondError(res,error)
-        }
-    }
-
     async getAll(req: express.Request, res: express.Response): Promise<void> {
         try {
             const admin = await Buyer.find().lean()

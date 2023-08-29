@@ -50,7 +50,7 @@ const sellerSchema : Schema = new Schema(
             required: false
         },
         registered: {
-            type: Number,
+            type: Boolean,
             required: false
         }
     },

@@ -1,4 +1,4 @@
-import Seller from "../models/sellers
+import Seller from "../models/sellers"
 import express from "express"
 import HttpResponse from "../utilities/httpResponse"
 import Helper from "../utilities/helper"
@@ -30,44 +30,6 @@ class SellerController{
             }
             await Seller.findByIdAndDelete(sellerId)
             HttpResponse.respondResult(res,"Seller Deleted Successfully!")
-        } catch (error) {
-            HttpResponse.respondError(res,error)
-        }
-    }
-
-    async create(req: express.Request, res: express.Response): Promise<void> {
-        const username: string = req.body.username
-        const email: string = req.body.email
-        const password: string = Helper.getHashed(req.body.password) 
-        const phoneNum: string = req.body.phoneNum
-        const nrcNumber: string = req.body.nrcNumber
-        const address: string = req.body.address
-        const role: number = req.body.role
-        const bio: string = req.body.bio 
-        const rating: number = req.body.bio 
-        const registered: boolean = req.body.registered 
-        const expoTokens: Array<any> = req.body.expoTokens
-
-        try {
-            //Check if there's already with required Username and email
-            const seller = await Seller.findOne({email}).lean()
-            if(seller){
-                 return HttpResponse.respondError(res,"This user email is already used!",StatusCodes.CONFLICT)
-            }
-            await Seller.create({
-                username,
-                email,
-                password,
-                phoneNum,
-                nrcNumber,
-                address,
-                role,
-                bio,
-                rating,
-                registered,
-                expoTokens
-            })
-            HttpResponse.respondStatus(res,"Seller Created Successfully!")
         } catch (error) {
             HttpResponse.respondError(res,error)
         }
@@ -114,26 +76,7 @@ class SellerController{
          }
     }
 
-    async login(req: express.Request, res: express.Response): Promise<void> {
-        const email: string  = req.body.email 
-        const password: string = Helper.getHashed(req.body.password)
-
-        try {
-            const seller = await Seller.findOne({
-                email,
-                password
-            }).lean()
-
-            if (!seller) {
-                return HttpResponse.respondError(res, "Username or password incorrect.", StatusCodes.UNAUTHORIZED)
-            }
- 
-            HttpResponse.respondResult(res, seller)
-        } catch (error) {
-            HttpResponse.respondError(res, error)
-        }
-    }
-
+   
     async updatePassword(req: express.Request, res: express.Response): Promise<void> {
         const sellerId: string = req.params.id 
         const oldPassword: string = Helper.getHashed(req.body.oldPassword)

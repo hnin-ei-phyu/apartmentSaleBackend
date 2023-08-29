@@ -3,6 +3,11 @@ import bodyParser from "body-parser"
 import fileUpload from "express-fileupload"
 import validator from "express-validator"
 import application from "../constants/application"
+import AdminRouter from "../router/adminRouter"
+import BuyerRouter from "../router/buyerRouter"
+import SellerRouter from "../router/sellerRouter"
+import NotificationRouter from "../router/notificationRouter"
+import AuthRouter from "../router/authRouter"
 
 const app: express.Application = express()
 const configs: any[] = [
@@ -31,4 +36,12 @@ app.use(function (req, res, next) {
 
     next()
 })
+
+//router 
+app.use("/api/admin",AdminRouter)
+app.use("/api/buyer",BuyerRouter)
+app.use("/api/seller",SellerRouter)
+app.use("/api/notification",NotificationRouter)
+app.use("/api/auth",AuthRouter)
+
 export default app 

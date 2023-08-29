@@ -1,9 +1,9 @@
 import { bool, boolean } from "joi"
-import { Schema, model } from "mongoose"
+import mongoose, { Schema, model } from "mongoose"
 
 const merchandiseSchema: Schema = new Schema(
     {
-        name: {
+        item: {
             type: String,
             required: true
         },
@@ -11,9 +11,12 @@ const merchandiseSchema: Schema = new Schema(
             type: Number,
             required: true
         },
-        township: {
+        location: {
             type: String,
             required: true
+        },
+        description: {
+            type: String,
         },
         photo: {
             type: String,
@@ -33,13 +36,10 @@ const merchandiseSchema: Schema = new Schema(
         isSoldout: {
             type: boolean
         },
-        thumbnail: {
-            type: String,
-            required: true
-        },
-        offical_remark: {
-            type: String,
-            required: false
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            Ref: "Seller"
         }
     },
     {

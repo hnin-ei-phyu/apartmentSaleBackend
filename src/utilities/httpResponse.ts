@@ -16,10 +16,12 @@ class HttpResponse{
     static respondResult(
         res: express.Response,
         data: any,
+        token: any = false,
         status: number = StatusCodes.OK
     ) {
         res.status(status).json({
             data,
+            token,
             success: true
         })
     }
