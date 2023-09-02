@@ -1,4 +1,5 @@
 import Merchandise from "../models/merchandises"
+import Seller from "../models/sellers"
 import HttpResponse from "../utilities/httpResponse"
 import express from "express"
 import { StatusCodes } from "http-status-codes"
@@ -14,9 +15,9 @@ class MerchandiseController {
         const videos: string = req.body.videos
         const isPubliced: boolean = req.body.isPubliced 
         const isSoldout: boolean = req.body.isSoldout 
-        const owner: string = req.body.owner.populate("_id")
-                                            .populate("username")
-                                            .populate("phoneNum")
+        const owner = await Seller.findOne().populate("_id")
+        .populate("username")
+        .populate("phoneNum")
 
         try {
             let data = await Merchandise.create({
@@ -46,9 +47,8 @@ class MerchandiseController {
         const videos: string = req.body.videos 
         const isPubliced: boolean = req.body.isPubliced 
         const isSoldout: boolean = req.body.isSoldout 
-        const owner: string = req.body.owner.populate("_id")
-                                            .populate("username")
-                                            .populate("phoneNum")
+        
+                                
 
         try {
             const merchandise = await Merchandise.findById(itemId).lean()
@@ -63,8 +63,7 @@ class MerchandiseController {
                 detail,
                 videos,
                 isPubliced,
-                isSoldout,
-                owner
+                isSoldout
             })
             HttpResponse.respondStatus(res,"Merchandise updated successfully!")
         } catch (error) {

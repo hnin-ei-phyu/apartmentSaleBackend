@@ -30,14 +30,15 @@ const buyerSchema : Schema = new Schema(
         },
         address: {
             type: String,
-            required: true
+            required: false
         },
         bio: {
             type: String,
             requried: false
         },
         rating: {
-            type: Number
+            type: Number,
+            default: 3,
         },
         registered: {
             type: Boolean

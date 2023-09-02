@@ -29,7 +29,7 @@ const sellerSchema : Schema = new Schema(
         },
         address: {
             type: String,
-            required: true
+            required: false
         },
         role: {
             type: Number,
@@ -39,7 +39,7 @@ const sellerSchema : Schema = new Schema(
         },
         bio: {
             type: String,
-            required: false
+            requried: false
         },
         rating: {
             type: Number,
