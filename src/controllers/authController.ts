@@ -123,10 +123,31 @@ async buyerRegister(req: express.Request, res: express.Response): Promise<void> 
                         email,
                         password,
                         nrcNumber
+                    });
+                    newBuyer
+                    .save()
+                    .then((result) => {
+                        //Handle account verification 
+                        //sendVerificationEmail(result, res)
                     })
                 }
             })
-        
+
+            .catch((err) => {
+                console.log(err)
+                res.json({
+                    status: "Failed",
+                    message: "Ah error accurred while checking for existing user!"
+                })
+            })
+        //send otp verification email
+        const sendOTPVerificationEmail = async () => {
+            try {
+                const otp = `${Math.floor(1000 + Math.random() * 9000)}`
+            } catch (error) {
+                
+            }
+        }
     }
 
     async sellerRegiseter(req: express.Request, res: express.Response): Promise<void> {
