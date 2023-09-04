@@ -103,23 +103,30 @@ async buyerRegister(req: express.Request, res: express.Response): Promise<void> 
     }
 
     async buyerLogin(req: express.Request, res: express.Response): Promise<void> {
+        const username: string = req.body.username
         const email: string  = req.body.email
         const password: string = Helper.getHashed(req.body.password)
-
-        try {
-            const buyer = await Buyer.findOne({
-                email,
-                password
-            }).lean()
-
-            if (!buyer) {
-                return HttpResponse.respondError(res, "Username or password incorrect.", StatusCodes.UNAUTHORIZED)
-            }
-            const token = jwt.sign({email,password},application.env.authSecret)
-            HttpResponse.respondResult(res, buyer,token)
-        } catch (error) {
-            HttpResponse.respondError(res, error)
-        }
+        const nrcNumber: string = req.body.nrcNumber
+        //Checking if user already exits
+        Buyer.find({email})
+            .then((result) => {
+                if(result.length){
+                   //A user already exists 
+                   res.json({
+                    status: "Failed",
+                    message: "User with the provided email already exists"
+                   })
+                } else {
+                    //Try to create new user 
+                    const newBuyer = new Buyer({
+                        username,
+                        email,
+                        password,
+                        nrcNumber
+                    })
+                }
+            })
+        
     }
 
     async sellerRegiseter(req: express.Request, res: express.Response): Promise<void> {
