@@ -1,6 +1,7 @@
 import Buyer from "../models/buyers"
 import Seller from "../models/sellers"
 import Admin from "../models/admins"
+import Otp from "../models/otps"
 import application from "../constants/application"
 import Helper from "../utilities/helper"
 import otpGenerator from "otp-generator"
@@ -9,6 +10,8 @@ import jwt from "jsonwebtoken"
 import HttpResponse from "../utilities/httpResponse"
 import { StatusCodes } from "http-status-codes"
 import express from "express"
+import axios from "axios"
+import bcrypt from "bcrypt"
  
 
 
@@ -103,51 +106,19 @@ async buyerRegister(req: express.Request, res: express.Response): Promise<void> 
     }
 
     async buyerLogin(req: express.Request, res: express.Response): Promise<void> {
-        const username: string = req.body.username
-        const email: string  = req.body.email
-        const password: string = Helper.getHashed(req.body.password)
-        const nrcNumber: string = req.body.nrcNumber
-        //Checking if user already exits
-        Buyer.find({email})
-            .then((result) => {
-                if(result.length){
-                   //A user already exists 
-                   res.json({
-                    status: "Failed",
-                    message: "User with the provided email already exists"
-                   })
-                } else {
-                    //Try to create new user 
-                    const newBuyer = new Buyer({
-                        username,
-                        email,
-                        password,
-                        nrcNumber
-                    });
-                    newBuyer
-                    .save()
-                    .then((result) => {
-                        //Handle account verification 
-                        //sendVerificationEmail(result, res)
-                    })
-                }
-            })
+        const buyer = await Buyer.findOne({
+            phoneNumber: req.body.phoneNumber
+        })
+        if(buyer)  return HttpResponse.respondError(res,"Buyer already registered!",StatusCodes.CONFLICT);
+        const OTP = otpGenerator.generate(6,{
+            digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
+        });
+        const phoneNumber = req.body.phoneNumber
+        console.log(OTP)
 
-            .catch((err) => {
-                console.log(err)
-                res.json({
-                    status: "Failed",
-                    message: "Ah error accurred while checking for existing user!"
-                })
-            })
-        //send otp verification email
-        const sendOTPVerificationEmail = async () => {
-            try {
-                const otp = `${Math.floor(1000 + Math.random() * 9000)}`
-            } catch (error) {
-                
-            }
-        }
+        const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
+        const result = await otp.save();
+        return HttpResponse.respondStatus(res,"Otp send successfully!")
     }
 
     async sellerRegiseter(req: express.Request, res: express.Response): Promise<void> {

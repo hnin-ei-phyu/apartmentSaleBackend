@@ -7,24 +7,24 @@ const buyerSchema : Schema = new Schema(
     {
         username: {
             type: String,
-            required: true,
+            required: false,
             unique: true
         },
         email: {
             type: String,
-            required: true,
+            required: false,
             unique: true
         },
         password: {
             type: String,
-            required: true
+            required: false
 
         },
         nrcNumber: {
             type: String,
-            required: true
+            required: false
         },
-        phoneNum: {
+        phoneNumber: {
             type: String,
             required: true
         },
