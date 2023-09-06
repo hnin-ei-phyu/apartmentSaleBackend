@@ -15,7 +15,7 @@ const application = {
         serverPort: process.env.SERVER_PORT || 3000,
         socketIOPort: process.env.SOCKET_IO_PORT || 3001,
         authSecret: process.env.TOKEN_SECRET_KEY || "jwt_default_key",
-        dtabaseUri: process.env.DATABASE_URI || "mongodb://localhost:27017/default_database",
+        dtabaseUri: process.env.DATABASE_URI || "mongodb://localhost:27017/apartmentSales",
         domainName: process.env.DOMAIN_NAME || "localhost:3000",
         storageLOcation: process.env.STORAGE_LoCATION || "disk",
         storageAccessKeyId: process.env.STORAGE_ACCESS_KEY_ID || "",
