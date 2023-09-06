@@ -10,22 +10,15 @@ const otpSchema: Schema = new Schema(
             type: Number,
             required: true
         },
-        for: {
-            type: String
-        },
-        todayAt: {
-            type: Date
-        },
-        sentCount: {
-            type: Number
-        },
-        confirmed: {
-            type: boolean
-        },
-        avaliableUntil: {
-            type: Date
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            index: {expires: 300}
+            //After 5 minutes it deleted automatically from the database
         }
-
+    },
+    {
+        timestamps: true
     }
 )
 const OTP = model("OTP",otpSchema)

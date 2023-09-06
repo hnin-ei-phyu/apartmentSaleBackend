@@ -1,13 +1,13 @@
-import Auth from "../middleware/auth"
+import AuthController from "../controllers/authController"
 import express from "express"
 const router = express.Router()
-const auth = new Auth()
+const authController = new AuthController()
 
-router.post("/register-admin",auth.adminRegister)
-router.get("/login-admin",auth.adminLogin)
-router.post("/register-buyer",auth.buyerRegister)
-router.get("/login-buyer",auth.buyerLogin)
-router.post("/register-seller",auth.sellerRegiseter)
-router.get("/login-seller",auth.sellerLogin)
+router.post("/register-admin",authController.adminRegister)
+router.get("/login-admin",authController.adminLogin)
+router.post("/register-buyer",authController.buyerRegister)
+router.get("/login-buyer",authController.buyerLogin)
+router.post("/register-seller",authController.sellerRegiseter)
+router.get("/login-seller",authController.sellerLogin)
 
 export default router

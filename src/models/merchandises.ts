@@ -1,4 +1,3 @@
-import { bool, boolean } from "joi"
 import mongoose, { Schema, model } from "mongoose"
 
 const merchandiseSchema: Schema = new Schema(
@@ -20,7 +19,7 @@ const merchandiseSchema: Schema = new Schema(
         },
         photo: {
             type: String,
-            required: false
+            required: true
         },
         detail: {
             type: String,
@@ -31,10 +30,10 @@ const merchandiseSchema: Schema = new Schema(
             required: false
         },
         isPubliced: {
-            type: boolean
+            type: Boolean
         },
         isSoldout: {
-            type: boolean
+            type: Boolean
         },
         owner: {
             type: mongoose.Schema.Types.ObjectId,
