@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
+    "@types/underscore": "^1.11.9",
     "aws-sdk": "^2.1338.0",
     "axios": "^1.5.0",
     "bcrypt": "^5.1.1",
@@ -35,7 +36,8 @@
     "nodemon": "^2.0.22",
     "otp-generator": "^4.0.1",
     "toad-scheduler": "^2.2.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "underscore": "^1.13.6"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",

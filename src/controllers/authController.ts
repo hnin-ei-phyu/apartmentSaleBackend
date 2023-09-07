@@ -5,13 +5,12 @@ import Otp from "../models/otps"
 import application from "../constants/application"
 import Helper from "../utilities/helper"
 import otpGenerator from "otp-generator"
-import { number, string } from "joi"
 import jwt from "jsonwebtoken"
 import HttpResponse from "../utilities/httpResponse"
 import { StatusCodes } from "http-status-codes"
 import express from "express"
-import axios from "axios"
-import bcrypt from "bcrypt"
+import bcrypt, { compare } from "bcrypt"
+import _ from "underscore"
  
 
 
@@ -119,6 +118,33 @@ async buyerRegister(req: express.Request, res: express.Response): Promise<void> 
         const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
         const result = await otp.save();
         return HttpResponse.respondStatus(res,"Otp send successfully!")
+    }
+
+    async verifyOtp(req: express.Request, res: express.Response): Promise<void> {
+        
+        const otpHolder = await Otp.find({
+            phoneNumber: req.body.phoneNumber
+        })
+
+            
+        if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
+
+            const rightOtpFind = otpHolder[otpHolder.length-1]
+            console.log(rightOtpFind)
+            const validBuyer = await bcrypt.compare(req.body.otp,rightOtpFind.otp)
+            console.log(validBuyer)
+
+        if(rightOtpFind.phoneNumber === req.body.phoneNumber && validBuyer) {
+            const buyer = new Buyer(_.pick(req.body,["phoneNumber"]))
+            const token = jwt.sign({},application.env.authSecret)
+            const result = await buyer.save()
+            const OTPDelete = await Otp.deleteMany({
+                phoneNumber: rightOtpFind.phoneNumber
+            })
+            return HttpResponse.respondResult(res,result,token)
+        } else {
+            HttpResponse.respondError(res,"Your OTP was wrong")
+        }
     }
 
     async sellerRegiseter(req: express.Request, res: express.Response): Promise<void> {
