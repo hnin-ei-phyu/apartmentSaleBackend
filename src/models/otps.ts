@@ -3,11 +3,11 @@ import { Schema, model } from "mongoose"
 const otpSchema: Schema = new Schema(
     {
         otp: {
-            type: Number,
+            type: String,
             required: true
         },
         phoneNumber: {
-            type: Number,
+            type: String,
             required: true
         },
         createdAt: {
