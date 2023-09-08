@@ -112,8 +112,10 @@ async buyerRegister(req: express.Request, res: express.Response): Promise<void> 
         const OTP = otpGenerator.generate(6,{
             digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
         });
-        const phoneNumber = req.body.phoneNumber
+        
         console.log(OTP)
+
+        const phoneNumber = req.body.phoneNumber
 
         const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
         const result = await otp.save();
@@ -125,17 +127,28 @@ async buyerRegister(req: express.Request, res: express.Response): Promise<void> 
         const otpHolder = await Otp.find({
             phoneNumber: req.body.phoneNumber
         })
+        console.log(otpHolder)
 
             
         if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
 
             const rightOtpFind = otpHolder[otpHolder.length-1]
             console.log(rightOtpFind)
-            const validBuyer = await bcrypt.compare(req.body.otp,rightOtpFind.otp)
-            console.log(validBuyer)
+            const otp: string = req.body.otp
+            
+            if(otp === rightOtpFind.otp) {
+                true
+            }
 
-        if(rightOtpFind.phoneNumber === req.body.phoneNumber && validBuyer) {
-            const buyer = new Buyer(_.pick(req.body,["phoneNumber"]))
+        if(rightOtpFind.phoneNumber === req.body.phoneNumber && true) {
+        const buyer = new Buyer({
+            phoneNumber: req.body.phoneNumber,
+            username: req.body.username,
+            email: req.body.email,  
+            password: req.body.password,
+            nrcNumber: req.body.nrcNumber,
+            address: req.body.address
+        })
             const token = jwt.sign({},application.env.authSecret)
             const result = await buyer.save()
             const OTPDelete = await Otp.deleteMany({

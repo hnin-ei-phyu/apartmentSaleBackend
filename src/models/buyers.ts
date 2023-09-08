@@ -1,7 +1,5 @@
 import { Schema, model } from "mongoose"
 import application from "../constants/application"
-import { text } from "stream/consumers"
-import { boolean } from "joi"
 
 const buyerSchema : Schema = new Schema(
     {
