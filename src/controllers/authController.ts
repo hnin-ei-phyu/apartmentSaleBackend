@@ -10,7 +10,7 @@ import HttpResponse from "../utilities/httpResponse"
 import { StatusCodes } from "http-status-codes"
 import express from "express"
 import bcrypt, { compare } from "bcrypt"
-import _ from "underscore"
+import _, { has } from "underscore"
  
 
 
@@ -112,29 +112,27 @@ async buyerRegister(req: express.Request, res: express.Response): Promise<void> 
         const OTP = otpGenerator.generate(6,{
             digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
         });
-        
         console.log(OTP)
+        const hashedOtp = Helper.getHashed(OTP)
 
         const phoneNumber = req.body.phoneNumber
 
-        const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
+        const otp = new Otp({ phoneNumber: phoneNumber, otp: hashedOtp});
         const result = await otp.save();
         return HttpResponse.respondStatus(res,"Otp send successfully!")
     }
 
-    async verifyOtp(req: express.Request, res: express.Response): Promise<void> {
+    async verifyBuyerOtp(req: express.Request, res: express.Response): Promise<void> {
         
         const otpHolder = await Otp.find({
             phoneNumber: req.body.phoneNumber
         })
-        console.log(otpHolder)
 
             
         if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
 
             const rightOtpFind = otpHolder[otpHolder.length-1]
-            console.log(rightOtpFind)
-            const otp: string = req.body.otp
+            const otp: string = Helper.getHashed(req.body.otp)
             
             if(otp === rightOtpFind.otp) {
                 true

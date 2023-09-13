@@ -7,7 +7,7 @@ router.post("/register-admin",authController.adminRegister)
 router.get("/login-admin",authController.adminLogin)
 router.post("/register-buyer",authController.buyerRegister)
 router.post("/login-buyer",authController.buyerLogin)
-router.post("/login-buyer/verifyOtp",authController.verifyOtp)
+router.post("/login-buyer/verifyBuyerOtp",authController.verifyBuyerOtp)
 router.post("/register-seller",authController.sellerRegiseter)
 router.get("/login-seller",authController.sellerLogin)
 
