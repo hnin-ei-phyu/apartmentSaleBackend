@@ -11,3 +11,5 @@ function notFoundErrorHandler(req: express.Request, res: express.Response, next:
     }) 
     
 }
+
+export default notFoundErrorHandler

@@ -4,8 +4,59 @@ import HttpResponse from "../utilities/httpResponse"
 import Helper from "../utilities/helper"
 import { StatusCodes } from "http-status-codes"
 import AuthedRequest from "../interfaces/authedRequest"
+import application from "../constants/application"
+import jwt from "jsonwebtoken"
+import _ from "underscore"
 
 class AdminController{
+
+    async adminRegister(req: express.Request, res: express.Response): Promise<void> {
+        const username: string = req.body.username
+        const email: string = req.body.email
+        const password: string = Helper.getHashed(req.body.password)
+        const phoneNum: string = req.body.phoneNum
+        
+        try {
+            //Check if there's already with required Username and email
+            const admin = await Admin.findOne({email}).lean()
+            if(admin){
+                return HttpResponse.respondError(res,"This user email is already used!",StatusCodes.CONFLICT)
+            }
+            const result = await Admin.create({
+                username,
+                email,
+                password,
+                phoneNum
+            })
+
+                const token = jwt.sign({email: result.email,id: result._id},application.env.authSecret)
+                HttpResponse.respondResult(res,result,token)
+            } catch (error) {
+                HttpResponse.respondError(res,error)
+        }
+    }
+
+    async adminLogin(req: express.Request, res: express.Response): Promise<void> {
+        
+        const email: string = req.body.email
+        const password: string = Helper.getHashed(req.body.password)
+
+        try {
+            const admin = await Admin.findOne({
+                email,
+                password
+            }).lean()
+            
+            if (!admin) {
+                return HttpResponse.respondError(res, "Username or Password incorrect", StatusCodes.UNAUTHORIZED)
+            }
+            const token = jwt.sign({email,password},application.env.authSecret)
+            HttpResponse.respondResult(res, admin,token)
+        } catch (error) {
+            HttpResponse.respondError(res, error)
+        }
+    }
+
 
      async get(req: express.Request,res: express.Response): Promise<void> {
         const adminId: string = req.params.id
@@ -74,9 +125,9 @@ class AdminController{
     }
 
      async updatePassword(req: express.Request, res: express.Response): Promise<void> {
-        const adminId: string = req.params.id
-        const oldPassword: string = Helper.getHashed(req.body.oldPassword)
-        const newPassword: string = Helper.getHashed(req.body.newPassword)
+        const adminId: String = req.params.id
+        const oldPassword: String = Helper.getHashed(req.body.oldPassword)
+        const newPassword: String = Helper.getHashed(req.body.newPassword)
 
         try {
             const admin = await Admin.findById(adminId).lean()

@@ -33,19 +33,17 @@ class NotificationController{
         }
     }
 
-    async getNotiWithLimit(req: express.Request, res: express.Response): Promise<void> {
-        const skip: number = req.body.skip
-        const limit: number = req.body.limit 
-
+    
+    async getAll(req: express.Request, res: express.Response): Promise<void> {
         try {
-            let noti = await Notification.find().skip(skip).limit(limit).lean()
+            const noti = await Notification.find().lean()
             if(!noti) {
-                return HttpResponse.respondError(res,"Notificatin not found!",StatusCodes.NOT_FOUND)
-            }
-            HttpResponse.respondResult(res,noti)
-        } catch (error) {
-            HttpResponse.respondError(res,error)
-        }
+                return HttpResponse.respondError(res,"Notification not Found!",StatusCodes.NOT_FOUND)
+             }
+             HttpResponse.respondResult(res,noti)
+         } catch (error) {
+             HttpResponse.respondError(res,error)
+         }
     }
 
     async totalCount(req: express.Request,res: express.Response): Promise<void> {

@@ -5,7 +5,7 @@ const notificationController = new NotificationController()
 
 router.post("/create-noti",notificationController.create)
 router.get("/get-noti/:id",notificationController.get)
-router.post("/getNoti-withLimit",notificationController.getNotiWithLimit)
+router.get("/get-all",notificationController.getAll)
 router.delete("/delete-noti/:id",notificationController.delete)
 router.get("/total-noti",notificationController.totalCount)
 

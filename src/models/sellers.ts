@@ -18,7 +18,7 @@ const sellerSchema : Schema = new Schema(
             required: true
 
         },
-        phoneNum: {
+        phoneNumber: {
             type: String,
             required: true
         },

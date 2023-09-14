@@ -9,5 +9,7 @@ router.delete("/delete-buyer/:id",buyerController.delete)
 router.put("/update-password/:id",buyerController.updatePassword)
 router.put("/update-info/:id",buyerController.update)
 router.get("/get-paginate",buyerController.paginate)
+router.post("/login-buyer",buyerController.buyerLogin)
+router.post("/login-buyer/verifyBuyerOtp",buyerController.verifyBuyerOtpAndCreate)
 
 export default router

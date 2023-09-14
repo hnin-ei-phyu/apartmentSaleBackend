@@ -4,8 +4,75 @@ import HttpResponse from "../utilities/httpResponse"
 import Helper from "../utilities/helper"
 import { StatusCodes } from "http-status-codes"
 import AuthedRequest from "../interfaces/authedRequest"
+import Otp from "../models/otps"
+import application from "../constants/application"
+import otpGenerator from "otp-generator"
+import jwt from "jsonwebtoken"
+import _ from "underscore"
+ 
 
 class SellerController{
+
+    async sellerLogin(req: express.Request, res: express.Response): Promise<void> {
+        const seller = await Seller.findOne({
+            phoneNumber: req.body.phoneNumber
+        })
+        if(seller)  return HttpResponse.respondError(res,"Seller already registered!",StatusCodes.CONFLICT);
+        const OTP = otpGenerator.generate(6,{
+            digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
+        });
+        
+        console.log(OTP)
+
+        const phoneNumber = req.body.phoneNumber
+
+        const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
+        const result = await otp.save();
+        return HttpResponse.respondStatus(res,"Otp send successfully!")
+    }
+
+    async verifySellerOtpAndCreate(req: express.Request, res: express.Response): Promise<void> {
+            
+        const otpHolder = await Otp.find({
+            phoneNumber: req.body.phoneNumber
+        })
+
+            
+        if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
+
+            const rightOtpFind = otpHolder[otpHolder.length-1]
+            const otp: string = req.body.otp
+            
+            if(otp === rightOtpFind.otp) {
+                true
+            }
+
+        if(rightOtpFind.phoneNumber === req.body.phoneNumber && true) {
+        const seller = new Seller({
+            phoneNumber: req.body.phoneNumber,
+            username: req.body.username,
+            email: req.body.email,  
+            password: req.body.password,
+            nrcNumber: req.body.nrcNumber,
+            address: req.body.address,
+            role:  req.body.role,
+            bio:  req.body.bio,
+            registered: req.body.registered,
+            savedItems: req.body.savedItems,
+            expoTokens: req.body.expoTokens
+        })
+            const token = jwt.sign({},application.env.authSecret)
+            const result = await seller.save()
+            const OTPDelete = await Otp.deleteMany({
+                phoneNumber: rightOtpFind.phoneNumber
+            })
+            return HttpResponse.respondResult(res,result,token)
+        } else {
+            HttpResponse.respondError(res,"Your OTP was wrong")
+        }
+    }
+
+
     async get(req: express.Request, res: express.Response): Promise<void> {
         const sellerId: string = req.params.id 
 

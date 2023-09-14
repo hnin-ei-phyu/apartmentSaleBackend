@@ -17,7 +17,6 @@ class MerchandiseController {
         const isSoldout: boolean = req.body.isSoldout 
         const owner = await Seller.findOne().populate("_id")
         .populate("username")
-        .populate("phoneNum")
 
         try {
             let data = await Merchandise.create({
