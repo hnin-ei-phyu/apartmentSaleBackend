@@ -11,5 +11,8 @@ router.put("/update-info/:id",buyerController.update)
 router.get("/get-paginate",buyerController.paginate)
 router.post("/login-buyer",buyerController.buyerLogin)
 router.post("/login-buyer/verifyBuyerOtp",buyerController.verifyBuyerOtpAndCreate)
+router.get("/total-buyer",buyerController.totalCount)
+router.post("/getWithRange",buyerController.getWithRange)
+router.post("/search",buyerController.search)
 
 export default router

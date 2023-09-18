@@ -13,5 +13,8 @@ router.put("/update-info/:id",auth.isSeller,sellerController.update)
 router.get("/get-paginate",auth.isSeller,sellerController.paginate)
 router.post("/login-seller",sellerController.sellerLogin)
 router.post("/login-seller/verifySellerOtp",sellerController.verifySellerOtpAndCreate)
+router.get("/total-seller",sellerController.totalCount)
+router.post("/getWithRange",sellerController.getWithRange)
+router.post("/search",sellerController.search)
 
 export default router

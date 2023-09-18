@@ -72,6 +72,49 @@ class SellerController{
         }
     }
 
+    async totalCount(req: express.Request, res: express.Response): Promise<void> {
+        try {
+            const admin = await Seller.count().lean()
+            if(!admin) {
+                return HttpResponse.respondError(res,"Admin not Found!",StatusCodes.NOT_FOUND)
+             }
+             HttpResponse.respondResult(res,admin)
+         } catch (error) {
+             HttpResponse.respondError(res,error)
+         } 
+    }
+
+    async getWithRange(req: express.Request, res: express.Response): Promise<void> {
+        if(!req.query.skip || !req.query.limit) {
+            return HttpResponse.respondError(res,"skip and limit is required at query",StatusCodes.BAD_REQUEST)
+        }
+
+        const skip: number = parseInt(req.query.toString())
+        const limit: number = parseInt(req.query.toString())
+
+        try {
+            const data: Array<Object> = await Seller.find().skip(skip).limit(limit).lean()
+            if(!data) {
+                return HttpResponse.respondError(res,"Admin not Found!",StatusCodes.NOT_FOUND)
+             }
+             HttpResponse.respondResult(res,data)
+         } catch (error) {
+             HttpResponse.respondError(res,error)
+         }
+    }
+
+    async search(req: express.Request, res: express.Response) {
+        let text: string | undefined = req.query.text?.toString()
+
+        try {
+            const data: Array<Object> = await Seller.find({ text: { $search: text } }).lean()
+            HttpResponse.respondResult(res,data)
+        } catch (error) {
+            HttpResponse.respondError(res,error)
+        }
+    }
+
+
 
     async get(req: express.Request, res: express.Response): Promise<void> {
         const sellerId: string = req.params.id 

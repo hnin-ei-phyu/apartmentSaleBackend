@@ -85,6 +85,17 @@ class Admin {
         }
     }
 
+    async totalCount(token: any = false) {
+        let headers: any = {}
+        if(token) headers["x-access-token"] = token
+        try {
+            let result = await axios.get(`${this.root}/total-admin`,{headers})
+            return result
+        } catch (error) {
+            throw error
+        }
+    }
+
     async paginate(token: any = false) {
         let headers: any = {}
         if(token) headers["x-access-token"] = token 
