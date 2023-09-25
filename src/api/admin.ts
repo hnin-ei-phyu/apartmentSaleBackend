@@ -96,6 +96,28 @@ class Admin {
         }
     }
 
+    async getWithRange(range:any,token: any = false) {
+        let headers: any = {}
+        if(token) headers["x-access-token"] = token 
+        try {
+            let result = await axios.post(`${this.root}/getWithRange`,range,{headers})
+            return result
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async search(token: any = false) {
+        let headers: any = {}
+        if(token) headers["x-access-token"] = token
+        try {
+            let result = await axios.get(`${this.root}/search`,{headers})
+            return result
+        } catch (error) {
+            throw error
+        }
+    }
+
     async paginate(token: any = false) {
         let headers: any = {}
         if(token) headers["x-access-token"] = token 

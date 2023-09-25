@@ -13,6 +13,6 @@ router.post("/register-admin",adminController.adminRegister)
 router.post("/login-admin",adminController.adminLogin)
 router.get("/total-admin",adminController.totalCount)
 router.post("/getWithRange",adminController.getWithRange)
-router.post("/search",adminController.search)
+router.get("/search",adminController.search)
 
 export default router
