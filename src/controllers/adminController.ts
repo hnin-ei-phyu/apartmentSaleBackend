@@ -7,7 +7,7 @@ import AuthedRequest from "../interfaces/authedRequest"
 import application from "../constants/application"
 import jwt from "jsonwebtoken"
 import _ from "underscore"
-import schema from "mongoose"
+
 
 class AdminController{
 
@@ -95,7 +95,7 @@ class AdminController{
         let text: string | undefined = req.query.text?.toString()
 
         try {
-            const data: Array<Object> = await Admin.find({ username: 'text', email: 'text'})
+            const data: Array<Object> = await Admin.find({ $text: { $search: text } }).lean()
 
             console.log(data)
             HttpResponse.respondResult(res,data)
