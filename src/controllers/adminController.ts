@@ -92,7 +92,8 @@ class AdminController{
         let text: string | undefined = req.query.text?.toString()
 
         try {
-            const data: Array<Object> = await Admin.find({ text: { $search: text } }).lean()
+            const data: Array<Object> = await Admin.find({ $
+                : { $search: text } }).lean()
             HttpResponse.respondResult(res,data)
         } catch (error) {
             HttpResponse.respondError(res,error)
