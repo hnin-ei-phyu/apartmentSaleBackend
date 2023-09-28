@@ -95,7 +95,7 @@ class AdminController{
         let text: string | undefined = req.query.text?.toString()
 
         try {
-            const data: Array<Object> = await Admin.find({ $text: { $search: text } }).lean()
+            const data: Array<Object> = await Admin.find({ text: { $search: text } }).lean()
 
             console.log(data)
             HttpResponse.respondResult(res,data)
@@ -103,8 +103,6 @@ class AdminController{
             HttpResponse.respondError(res,error)
         }
     }
-
-
      async get(req: express.Request,res: express.Response): Promise<void> {
         const adminId: string = req.params.id
 
