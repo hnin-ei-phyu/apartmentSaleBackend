@@ -8,6 +8,7 @@ import application from "../constants/application"
 import jwt from "jsonwebtoken"
 import _ from "underscore"
 
+
 class AdminController{
 
     async adminRegister(req: express.Request, res: express.Response): Promise<void> {
@@ -64,6 +65,7 @@ class AdminController{
                 return HttpResponse.respondError(res,"Admin not Found!",StatusCodes.NOT_FOUND)
              }
              HttpResponse.respondResult(res,admin)
+             console.log(typeof(admin))
          } catch (error) {
              HttpResponse.respondError(res,error)
          } 
@@ -74,8 +76,8 @@ class AdminController{
             return HttpResponse.respondError(res,"skip and limit is required at query",StatusCodes.BAD_REQUEST)
         }
 
-        const skip: number = parseInt(req.query.toString())
-        const limit: number = parseInt(req.query.toString())
+        const skip: number = parseInt(req.query.skip.toString())
+        const limit: number = parseInt(req.query.limit.toString())
 
         try {
             const data: Array<Object> = await Admin.find().skip(skip).limit(limit).lean()
@@ -89,18 +91,16 @@ class AdminController{
     }
 
     async search(req: express.Request, res: express.Response) {
+        
         let text: string | undefined = req.query.text?.toString()
 
         try {
-            const data: Array<Object> = await Admin.find({ $
-                : { $search: text } }).lean()
+            const data: Array<Object> = await Admin.find({ text: { $search: text } }).lean()
             HttpResponse.respondResult(res,data)
         } catch (error) {
             HttpResponse.respondError(res,error)
         }
     }
-
-
      async get(req: express.Request,res: express.Response): Promise<void> {
         const adminId: string = req.params.id
 
