@@ -109,6 +109,49 @@ class MerchandiseController {
         }
     }
 
+    async totalCount(req: express.Request,res: express.Response): Promise<void> {
+        try {
+            const data = await Merchandise.count().lean()
+            if(!data) {
+                return HttpResponse.respondError(res,"Data not found!",StatusCodes.NOT_FOUND)
+            }
+            HttpResponse.respondResult(res,data)
+        } catch (error) {
+            HttpResponse.respondError(res,error)
+        }
+    }
+
+    async getWithRange(req: express.Request,res: express.Response): Promise<void> {
+        if(!req.query.skip || !req.query.limit) {
+            return HttpResponse.respondError(res,"skip and limit is required at query",StatusCodes.BAD_REQUEST)
+        }
+
+        const skip: number = parseInt(req.query.toString())
+        const limit: number = parseInt(req.query.toString())
+
+        try {
+            const data: Array<Object> = await Merchandise.find().skip(skip).limit(limit).lean()
+            if(!data) {
+                return HttpResponse.respondError(res,"Admin not Found!",StatusCodes.NOT_FOUND)
+            }
+            HttpResponse.respondResult(res,data)
+        } catch (error) {
+            HttpResponse.respondError(res,error)
+        }
+    }
+
+    async search(req: express.Request, res: express.Response) {
+        let text: string | undefined = req.query.text?.toString()
+
+        try {
+            const data: Array<Object> = await Merchandise.find({ $
+                : { $search: text } }).lean()
+            HttpResponse.respondResult(res,data)
+        } catch (error) {
+            HttpResponse.respondError(res,error)
+        }
+    }
+
     async paginate(req: express.Request, res: express.Response): Promise<void> {
         const page: any = req.query.page || 1
         const perPage: any = req.query.perPage || 10

@@ -96,8 +96,6 @@ class AdminController{
 
         try {
             const data: Array<Object> = await Admin.find({ text: { $search: text } }).lean()
-
-            console.log(data)
             HttpResponse.respondResult(res,data)
         } catch (error) {
             HttpResponse.respondError(res,error)
