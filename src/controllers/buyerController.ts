@@ -11,7 +11,6 @@ import jwt from "jsonwebtoken"
 import _ from "underscore"
 
 class BuyerController{
-
     async buyerLogin(req: express.Request, res: express.Response): Promise<void> {
         const buyer = await Buyer.findOne({
             phoneNumber: req.body.phoneNumber
