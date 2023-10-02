@@ -9,5 +9,8 @@ router.get("/get-merchandise/:id",merchandiseController.get)
 router.get("/get-all",merchandiseController.getAll)
 router.get("/get-paginate",merchandiseController.paginate)
 router.delete("/delete-merchandise/:id",merchandiseController.delete)
+router.get("/total-merchandise",merchandiseController.totalCount)
+router.post("/getWithRange",merchandiseController.getWithRange)
+router.get("/search",merchandiseController.search)
 
 export default router

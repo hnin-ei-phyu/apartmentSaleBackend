@@ -13,62 +13,50 @@ import _ from "underscore"
 
 class SellerController{
 
-    async sellerLogin(req: express.Request, res: express.Response): Promise<void> {
-        const seller = await Seller.findOne({
-            phoneNumber: req.body.phoneNumber
-        })
-        if(seller)  return HttpResponse.respondError(res,"Seller already registered!",StatusCodes.CONFLICT);
-        const OTP = otpGenerator.generate(6,{
-            digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
-        });
+    async sellerRegister(req: express.Request, res: express.Response): Promise<void> {
+        const username: string = req.body.username
+        const email: string = req.body.email
+        const password: string = Helper.getHashed(req.body.password)
+        const phoneNumber: string = req.body.phoneNumber
         
-        console.log(OTP)
+        try {
+            //Check if there's already with required Username and email
+            const seller = await Seller.findOne({email}).lean()
+            if(seller){
+                return HttpResponse.respondError(res,"This user email is already used!",StatusCodes.CONFLICT)
+            }
+            const result = await Seller.create({
+                username,
+                email,
+                password,
+                phoneNumber
+            })
 
-        const phoneNumber = req.body.phoneNumber
-
-        const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
-        const result = await otp.save();
-        return HttpResponse.respondStatus(res,"Otp send successfully!")
+                const token = jwt.sign({email: result.email,id: result._id},application.env.authSecret)
+                HttpResponse.respondResult(res,result,token)
+            } catch (error) {
+                HttpResponse.respondError(res,error)
+        }
     }
 
-    async verifySellerOtpAndCreate(req: express.Request, res: express.Response): Promise<void> {
-            
-        const otpHolder = await Otp.find({
-            phoneNumber: req.body.phoneNumber
-        })
+    async sellerLogin(req: express.Request, res: express.Response): Promise<void> {
+        
+        const email: string = req.body.email
+        const password: string = Helper.getHashed(req.body.password)
 
+        try {
+            const admin = await Seller.findOne({
+                email,
+                password
+            }).lean()
             
-        if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
-
-            const rightOtpFind = otpHolder[otpHolder.length-1]
-            const otp: string = req.body.otp
-            
-            if(otp === rightOtpFind.otp) {
-                true
+            if (!admin) {
+                return HttpResponse.respondError(res, "Username or Password incorrect", StatusCodes.UNAUTHORIZED)
             }
-
-        if(rightOtpFind.phoneNumber === req.body.phoneNumber && true) {
-        const seller = new Seller({
-            phoneNumber: req.body.phoneNumber,
-            username: req.body.username,
-            email: req.body.email,  
-            password: req.body.password,
-            nrcNumber: req.body.nrcNumber,
-            address: req.body.address,
-            role:  req.body.role,
-            bio:  req.body.bio,
-            registered: req.body.registered,
-            savedItems: req.body.savedItems,
-            expoTokens: req.body.expoTokens
-        })
-            const token = jwt.sign({},application.env.authSecret)
-            const result = await seller.save()
-            const OTPDelete = await Otp.deleteMany({
-                phoneNumber: rightOtpFind.phoneNumber
-            })
-            return HttpResponse.respondResult(res,result,token)
-        } else {
-            HttpResponse.respondError(res,"Your OTP was wrong")
+            const token = jwt.sign({email,password},application.env.authSecret)
+            HttpResponse.respondResult(res, admin,token)
+        } catch (error) {
+            HttpResponse.respondError(res, error)
         }
     }
 
