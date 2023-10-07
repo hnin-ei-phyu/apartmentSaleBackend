@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes"
 import Buyer from "../models/buyers"
 import Seller from "../models/sellers"
 import Admin from "../models/admins"
-import AuthedRequest from "../interfaces/authedRequest"
+import AuthedRequest from "../types/AuthedRequest"
 import application from "../constants/application"
 
 class Auth {
@@ -47,11 +47,11 @@ class Auth {
         try {
             let decoded: any = jwt.verify(token,application.env.authSecret)
             //Find in Seller Collections
-            const seller = await Buyer.findOne({_id: decoded.id}).lean()
-            if(!seller){
+            const buyer = await Buyer.findOne({_id: decoded.id}).lean()
+            if(!buyer){
                 HttpResponse.respondError(res, "You're not buyer",StatusCodes.UNAUTHORIZED)
             } else {
-                req.user = seller
+                req.user = buyer
                 req.user.role = "buyer"
                 next()
             }
@@ -84,8 +84,6 @@ class Auth {
             HttpResponse.respondError(res, error)
         }
      }
-
-
 
 }
 export default Auth

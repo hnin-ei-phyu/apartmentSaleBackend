@@ -3,10 +3,10 @@ import express from "express"
 import HttpResponse from "../utilities/httpResponse"
 import Helper from "../utilities/helper"
 import { StatusCodes } from "http-status-codes"
-import AuthedRequest from "../interfaces/authedRequest"
+import AuthedRequest from "../types/AuthedRequest"
 import Otp from "../models/otps"
 import application from "../constants/application"
-import otpGenerator from "otp-generator"
+// import otpGenerator from "otp-generator"
 import jwt from "jsonwebtoken"
 import _ from "underscore"
  
@@ -17,6 +17,7 @@ class SellerController{
         const username: string = req.body.username
         const email: string = req.body.email
         const password: string = Helper.getHashed(req.body.password)
+        const comfirmedPassword: string = Helper.getHashed(req.body.comfirmedPassword)
         const phoneNumber: string = req.body.phoneNumber
         
         try {
@@ -25,15 +26,22 @@ class SellerController{
             if(seller){
                 return HttpResponse.respondError(res,"This user email is already used!",StatusCodes.CONFLICT)
             }
-            const result = await Seller.create({
-                username,
-                email,
-                password,
-                phoneNumber
-            })
+
+            if(password === comfirmedPassword) {
+                const result = await Seller.create({
+                    username,
+                    email,
+                    password,
+                    comfirmedPassword,
+                    phoneNumber
+                })
 
                 const token = jwt.sign({email: result.email,id: result._id},application.env.authSecret)
-                HttpResponse.respondResult(res,result,token)
+                return HttpResponse.respondResult(res,result,token)
+            }
+            
+            HttpResponse.respondError(res,"Your password and comfirmed are not matched!")
+                
             } catch (error) {
                 HttpResponse.respondError(res,error)
         }
@@ -59,6 +67,34 @@ class SellerController{
             HttpResponse.respondError(res, error)
         }
     }
+
+    // async verifyOtpAndLogin(req: express.Request, res: express.Response): Promise<void> {
+            
+    //     const otpHolder = await Otp.find({
+    //         phoneNumber: req.body.phoneNumber
+    //     })
+
+            
+    //     if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
+
+    //         const rightOtpFind = otpHolder[otpHolder.length-1]
+    //         const otp: string = req.body.otp
+            
+    //         if(otp === rightOtpFind.otp) {
+    //             true
+    //         }
+
+    //     if(rightOtpFind.phoneNumber === req.body.phoneNumber && true) {
+    //         const seller = await Seller.findOne({phoneNumber: req.body.phoneNumber})
+    //         const token = jwt.sign({},application.env.authSecret)
+    //         const OTPDelete = await Otp.deleteMany({
+    //             phoneNumber: rightOtpFind.phoneNumber
+    //         })
+    //         return HttpResponse.respondResult(res,seller,token)
+    //     } else {
+    //         HttpResponse.respondError(res,"Your OTP was wrong")
+    //     }
+    // }
 
     async totalCount(req: express.Request, res: express.Response): Promise<void> {
         try {
