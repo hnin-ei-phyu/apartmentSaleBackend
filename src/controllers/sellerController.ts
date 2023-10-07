@@ -68,6 +68,7 @@ class SellerController{
         }
     }
 
+<<<<<<< HEAD
     // async verifyOtpAndLogin(req: express.Request, res: express.Response): Promise<void> {
             
     //     const otpHolder = await Otp.find({
@@ -95,6 +96,35 @@ class SellerController{
     //         HttpResponse.respondError(res,"Your OTP was wrong")
     //     }
     // }
+=======
+    async verifyOtpAndLogin(req: express.Request, res: express.Response): Promise<void> {
+            
+        const otpHolder = await Otp.find({
+            phoneNumber: req.body.phoneNumber
+        })
+
+            
+        if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
+
+            const rightOtpFind = otpHolder[otpHolder.length-1]
+            const otp: string = req.body.otp
+            
+            if(otp === rightOtpFind.otp) {
+                true
+            }
+
+        if(rightOtpFind.phoneNumber === req.body.phoneNumber && true) {
+            const seller = await Seller.findOne({phoneNumber: req.body.phoneNumber})
+            const token = jwt.sign({},application.env.authSecret)
+            const OTPDelete = await Otp.deleteMany({
+                phoneNumber: rightOtpFind.phoneNumber
+            })
+            return HttpResponse.respondResult(res,seller,token)
+        } else {
+            HttpResponse.respondError(res,"Your OTP was wrong")
+        }
+    }
+>>>>>>> 0cf641ce3db137f6b708e2b49b7793e8f7f79408
 
     async totalCount(req: express.Request, res: express.Response): Promise<void> {
         try {
