@@ -18,6 +18,10 @@ const sellerSchema : Schema = new Schema(
             required: true
 
         },
+        comfirmedPassword: {
+            type: String,
+            required: true,
+        },
         phoneNumber: {
             type: String,
             required: false
@@ -35,7 +39,7 @@ const sellerSchema : Schema = new Schema(
             type: Number,
             min: 0,
             max: 2,
-            default: "1"
+            default: "2"
         },
         bio: {
             type: String,
