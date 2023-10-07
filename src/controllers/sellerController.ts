@@ -60,6 +60,34 @@ class SellerController{
         }
     }
 
+    async verifyOtpAndLogin(req: express.Request, res: express.Response): Promise<void> {
+            
+        const otpHolder = await Otp.find({
+            phoneNumber: req.body.phoneNumber
+        })
+
+            
+        if(otpHolder.length === 0) return HttpResponse.respondError(res,"You use an Expired OTP!",StatusCodes.UNAUTHORIZED)
+
+            const rightOtpFind = otpHolder[otpHolder.length-1]
+            const otp: string = req.body.otp
+            
+            if(otp === rightOtpFind.otp) {
+                true
+            }
+
+        if(rightOtpFind.phoneNumber === req.body.phoneNumber && true) {
+            const seller = await Seller.findOne({phoneNumber: req.body.phoneNumber})
+            const token = jwt.sign({},application.env.authSecret)
+            const OTPDelete = await Otp.deleteMany({
+                phoneNumber: rightOtpFind.phoneNumber
+            })
+            return HttpResponse.respondResult(res,seller,token)
+        } else {
+            HttpResponse.respondError(res,"Your OTP was wrong")
+        }
+    }
+
     async totalCount(req: express.Request, res: express.Response): Promise<void> {
         try {
             const admin = await Seller.count().lean()

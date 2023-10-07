@@ -11,7 +11,6 @@ const buyerSchema : Schema = new Schema(
         email: {
             type: String,
             required: false,
-            unique: true
         },
         password: {
             type: String,
@@ -51,7 +50,7 @@ const buyerSchema : Schema = new Schema(
             type: Number,
             min: 0,
             max: 2,
-            default: 2
+            default: 1
         }
     },
     {
