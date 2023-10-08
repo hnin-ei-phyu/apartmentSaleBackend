@@ -10,6 +10,37 @@ import application from "../constants/application"
 
 class Auth {
 
+     async isAuth(req: AuthedRequest, res: express.Response, next: NextFunction) : Promise<void> {
+        //Get token from request
+        const token: any = req.query.token || req.headers["x-access-token"]
+
+        if(!token) {
+            return HttpResponse.respondError(res,"Auth token is required",StatusCodes.UNAUTHORIZED)
+        }
+
+        try {
+            let decoded: any = jwt.verify(token,application.env.authSecret)
+            
+            //Find in Admin Collections
+            const admin = await Admin.findOne({_id: decoded.id}).lean()
+            if(admin) next()
+   
+            //Find in Buyer Collections
+            const buyer = await Buyer.findOne({_id: decoded.id}).lean()
+            if(buyer) next()
+
+            //Find in Seller Collections
+            const seller = await Seller.findOne({_id: decoded.id}).lean()
+            if(seller) next()
+                
+            HttpResponse.respondError(res,"Invalid Token",StatusCodes.UNAUTHORIZED)
+
+
+        } catch (error) {
+            HttpResponse.respondError(res,error)
+        }
+     }
+
     
      async isAdmin(req: AuthedRequest, res: express.Response, next: NextFunction): Promise<void> {
 
