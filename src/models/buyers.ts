@@ -11,11 +11,14 @@ const buyerSchema : Schema = new Schema(
         email: {
             type: String,
             required: false,
-            unique: true
         },
         password: {
             type: String,
+<<<<<<< HEAD
             required: true
+=======
+            required: true,
+>>>>>>> 3b0b59fe25896c8a879e536259a672e980580682
 
         },
         nrcNumber: {
@@ -24,7 +27,11 @@ const buyerSchema : Schema = new Schema(
         },
         phoneNumber: {
             type: String,
+<<<<<<< HEAD
             required: false
+=======
+            required: false,
+>>>>>>> 3b0b59fe25896c8a879e536259a672e980580682
         },
         address: {
             type: String,
@@ -51,7 +58,7 @@ const buyerSchema : Schema = new Schema(
             type: Number,
             min: 0,
             max: 2,
-            default: 2
+            default: 1
         }
     },
     {

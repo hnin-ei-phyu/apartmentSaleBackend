@@ -11,12 +11,23 @@ import jwt from "jsonwebtoken"
 import _ from "underscore"
 
 class BuyerController{
+<<<<<<< HEAD
 
     async buyerRegister(req: express.Request, res: express.Response): Promise<void> {
         const username: string = req.body.username
         const email: string = req.body.email
         const password: string = Helper.getHashed(req.body.password)
         const phoneNumber: string = req.body.phoneNumber
+=======
+    async buyerLogin(req: express.Request, res: express.Response): Promise<void> {
+        const buyer = await Buyer.findOne({
+            phoneNumber: req.body.phoneNumber
+        })
+        if(buyer)  return HttpResponse.respondError(res,"Buyer already registered!",StatusCodes.CONFLICT);
+        const OTP = otpGenerator.generate(6,{
+            digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
+        });
+>>>>>>> 3b0b59fe25896c8a879e536259a672e980580682
         
         try {
             //Check if there's already with required Username and email
