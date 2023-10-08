@@ -12,11 +12,7 @@ router.put("/update-password/:id",sellerController.updatePassword)
 router.put("/update-info/:id",sellerController.update)
 router.get("/get-paginate",sellerController.paginate)
 router.post("/login-seller",sellerController.sellerLogin)
-<<<<<<< HEAD
 router.post("/register-seller",sellerController.sellerRegister)
-=======
-router.post("/login-seller/verifyOtpAndCreate",sellerController.verifyOtpAndCreate)
->>>>>>> 3b0b59fe25896c8a879e536259a672e980580682
 router.get("/total-seller",sellerController.totalCount)
 router.post("/getWithRange",sellerController.getWithRange)
 router.post("/search",sellerController.search)

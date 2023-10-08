@@ -8,6 +8,7 @@ import BuyerRouter from "../router/buyerRouter"
 import SellerRouter from "../router/sellerRouter"
 import NotificationRouter from "../router/notificationRouter"
 import MerchandiseRouter from "../router/merchandiseRouter"
+import AuthRouter from "../router/authRouter"
 
 const app: express.Application = express()
 const configs: any[] = [
@@ -43,5 +44,6 @@ app.use("/api/buyer",BuyerRouter)
 app.use("/api/seller",SellerRouter)
 app.use("/api/notification",NotificationRouter)
 app.use("/api/merchandise",MerchandiseRouter)
+app.use("/api/auth",AuthRouter)
 
 export default app 

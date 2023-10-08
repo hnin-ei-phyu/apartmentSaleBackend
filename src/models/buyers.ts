@@ -14,11 +14,7 @@ const buyerSchema : Schema = new Schema(
         },
         password: {
             type: String,
-<<<<<<< HEAD
             required: true
-=======
-            required: true,
->>>>>>> 3b0b59fe25896c8a879e536259a672e980580682
 
         },
         nrcNumber: {
@@ -27,11 +23,7 @@ const buyerSchema : Schema = new Schema(
         },
         phoneNumber: {
             type: String,
-<<<<<<< HEAD
             required: false
-=======
-            required: false,
->>>>>>> 3b0b59fe25896c8a879e536259a672e980580682
         },
         address: {
             type: String,

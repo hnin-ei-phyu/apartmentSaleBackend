@@ -13,7 +13,6 @@ import _ from "underscore"
 
 class SellerController{
 
-<<<<<<< HEAD
     async sellerRegister(req: express.Request, res: express.Response): Promise<void> {
         const username: string = req.body.username
         const email: string = req.body.email
@@ -58,41 +57,6 @@ class SellerController{
                 email,
                 password
             }).lean()
-=======
-    async sellerLogin(req: express.Request, res: express.Response): Promise<void> {
-        const seller = await Seller.findOne({
-            phoneNumber: req.body.phoneNumber
-        })
-        if(!seller){
-            const OTP = otpGenerator.generate(6,{
-                digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
-            });
-            
-            console.log(OTP)
-    
-            const phoneNumber = req.body.phoneNumber
-    
-            const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
-            const result = await otp.save();
-            return HttpResponse.respondStatus(res,"Otp send successfully, you're ready to register!")
-            
-        }
-
-            const OTP = otpGenerator.generate(6,{
-                digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false,specialChars: false
-            });
-            
-            console.log(OTP)
-
-            const phoneNumber = req.body.phoneNumber
-
-            const otp = new Otp({ phoneNumber: phoneNumber, otp: OTP});
-            const result = await otp.save();
-            return HttpResponse.respondStatus(res,"Otp send successfully!")
-    }
-
-    async verifyOtpAndCreate(req: express.Request, res: express.Response): Promise<void> {
->>>>>>> 3b0b59fe25896c8a879e536259a672e980580682
             
             if (!admin) {
                 return HttpResponse.respondError(res, "Username or Password incorrect", StatusCodes.UNAUTHORIZED)
