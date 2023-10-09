@@ -19,6 +19,7 @@ class BuyerController{
         const comfirmedPassword: string = Helper.getHashed(req.body.comfirmedPassword)
         const phoneNumber: string = req.body.phoneNumber
         
+
         try {
             //Check if there's already with required Username and email
             const buyer = await Buyer.findOne({email}).lean()

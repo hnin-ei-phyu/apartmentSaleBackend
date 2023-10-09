@@ -1,16 +1,15 @@
 import AdminController from "../controllers/adminController"
 import express from "express"
-import Auth from "../middleware/auth"
 
 const router = express.Router()
 const adminController = new AdminController()
-const auth = new Auth()
 
-router.get("/get-admin/:id",auth.isAdmin,adminController.get)
-router.get("/get-all",auth.isAdmin,adminController.getAll)
-router.delete("/delete-admin/:id",auth.isAdmin,adminController.delete)
-router.put("/update-password/:id",auth.isAdmin,adminController.updatePassword)
-router.put("/update-info/:id",auth.isAdmin,adminController.update)
+
+router.get("/get-admin/:id",adminController.get)
+router.get("/get-all",adminController.getAll)
+router.delete("/delete-admin/:id",adminController.delete)
+router.put("/update-password/:id",adminController.updatePassword)
+router.put("/update-info/:id",adminController.update)
 router.get("/get-paginate",adminController.paginate)
 router.post("/register-admin",adminController.adminRegister)
 router.post("/login-admin",adminController.adminLogin)

@@ -97,7 +97,7 @@ class SellerController{
     // }
 
     async totalCount(req: express.Request, res: express.Response): Promise<void> {
-        try {
+                try {
             const admin = await Seller.count().lean()
             if(!admin) {
                 return HttpResponse.respondError(res,"Admin not Found!",StatusCodes.NOT_FOUND)
