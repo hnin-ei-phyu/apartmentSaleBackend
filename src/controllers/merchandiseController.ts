@@ -154,7 +154,7 @@ class MerchandiseController {
 
     async paginate(req: express.Request, res: express.Response): Promise<void> {
         const page: any = req.query.page || 1
-        const perPage: any = req.query.perPage || 10
+        const perPage: any = req.query.perPage || 4
         const sort: any = req.params.sort || -1 
 
         try {
